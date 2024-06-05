@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Box } from '@mui/material';
 
 const CreateTaskPopup = ({ modal, toggle, save }) => {
     const [taskName, setTaskName] = useState('');
@@ -16,9 +16,10 @@ const CreateTaskPopup = ({ modal, toggle, save }) => {
 
     const handleSave = (e) => {
         e.preventDefault();
-        let taskObj = {};
-        taskObj["Name"] = taskName;
-        taskObj["Description"] = description;
+        const taskObj = {
+            Name: taskName,
+            Description: description
+        };
         save(taskObj);
     };
 
@@ -27,7 +28,7 @@ const CreateTaskPopup = ({ modal, toggle, save }) => {
             <DialogTitle>Create Task</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    <div className="form-group">
+                    <Box component="form">
                         <TextField
                             label="Task Name"
                             variant="outlined"
@@ -37,8 +38,6 @@ const CreateTaskPopup = ({ modal, toggle, save }) => {
                             name="taskName"
                             margin="dense"
                         />
-                    </div>
-                    <div className="form-group">
                         <TextField
                             label="Description"
                             variant="outlined"
@@ -49,8 +48,9 @@ const CreateTaskPopup = ({ modal, toggle, save }) => {
                             onChange={handleChange}
                             name="description"
                             margin="dense"
+                            sx={{ mt: 2 }}
                         />
-                    </div>
+                    </Box>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

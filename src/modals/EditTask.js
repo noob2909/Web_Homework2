@@ -1,29 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Box } from '@mui/material';
 
 const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
     const [taskName, setTaskName] = useState('');
     const [description, setDescription] = useState('');
+    const [category, setCategory] = useState('');
+
+    useEffect(() => {
+        if (taskObj) {
+            setTaskName(taskObj.Name);
+            setDescription(taskObj.Description);
+            setCategory(taskObj.Category || '');
+        }
+    }, [taskObj]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === "taskName") {
             setTaskName(value);
-        } else {
+        } else if (name === "description") {
             setDescription(value);
+        } else if (name === "category") {
+            setCategory(value);
         }
     };
 
-    useEffect(() => {
-        setTaskName(taskObj.Name);
-        setDescription(taskObj.Description);
-    }, [taskObj]);
-
     const handleUpdate = (e) => {
         e.preventDefault();
-        let tempObj = {};
-        tempObj['Name'] = taskName;
-        tempObj['Description'] = description;
+        const tempObj = {
+            Name: taskName,
+            Description: description,
+            Category: category
+        };
         updateTask(tempObj);
     };
 
@@ -31,32 +39,39 @@ const EditTaskPopup = ({ modal, toggle, updateTask, taskObj }) => {
         <Dialog open={modal} onClose={toggle}>
             <DialogTitle>Update Task</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    <div className="form-group">
-                        <TextField
-                            label="Task Name"
-                            variant="outlined"
-                            fullWidth
-                            value={taskName}
-                            onChange={handleChange}
-                            name="taskName"
-                            margin="dense"
-                        />
-                    </div>
-                    <div className="form-group">
-                        <TextField
-                            label="Description"
-                            variant="outlined"
-                            fullWidth
-                            multiline
-                            rows={5}
-                            value={description}
-                            onChange={handleChange}
-                            name="description"
-                            margin="dense"
-                        />
-                    </div>
-                </DialogContentText>
+                <Box component="form">
+                    <TextField
+                        label="Task Name"
+                        variant="outlined"
+                        fullWidth
+                        value={taskName}
+                        onChange={handleChange}
+                        name="taskName"
+                        margin="dense"
+                    />
+                    <TextField
+                        label="Description"
+                        variant="outlined"
+                        fullWidth
+                        multiline
+                        rows={3}
+                        value={description}
+                        onChange={handleChange}
+                        name="description"
+                        margin="dense"
+                        sx={{ mt: 2 }}
+                    />
+                    <TextField
+                        label="Category"
+                        variant="outlined"
+                        fullWidth
+                        value={category}
+                        onChange={handleChange}
+                        name="category"
+                        margin="dense"
+                        sx={{ mt: 2 }}
+                    />
+                </Box>
             </DialogContent>
             <DialogActions>
                 <Button color="primary" onClick={handleUpdate}>Update</Button>
